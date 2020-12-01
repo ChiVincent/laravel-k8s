@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Notifications\Auth\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -46,10 +43,6 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(
-            new class($token) extends ResetPassword implements ShouldQueue {
-                use Queueable;
-            }
-        );
+        $this->notify(new ResetPassword($token));
     }
 }
