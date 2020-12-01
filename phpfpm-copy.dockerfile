@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM ghcr.io/chivincent-rosetta/laravel-php:fpm
 
 WORKDIR /web
 
