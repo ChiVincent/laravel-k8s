@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Publish to GitHub Package
+      - name: Publish Codebase Image
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: chivincent-rosetta/laravel-k8s-codebase
