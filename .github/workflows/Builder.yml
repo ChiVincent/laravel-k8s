@@ -12,6 +12,6 @@ jobs:
         with:
           name: chivincent-rosetta/laravel-k8s-codebase
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CR_TOKEN }}
           registry: ghcr.io
           dockerfile: builder.dockerfile
