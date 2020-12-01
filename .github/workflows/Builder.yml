@@ -1,0 +1,17 @@
+name: Docker Image Builder
+
+on: push
+
+jobs:
+  codebaase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish to GitHub Package
+        uses: elgohr/Publish-Docker-Github-Action@master
+          with:
+            name: chivincent-rosetta/laravel-k8s/codebase
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+            registry: ghcr.io
+            dockerfile: builder.dockerfile
