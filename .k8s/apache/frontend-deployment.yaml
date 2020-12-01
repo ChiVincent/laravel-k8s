@@ -20,6 +20,11 @@ spec:
           ports:
             - containerPort: 80
           env:
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: laravel-app
+                  value: key
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
