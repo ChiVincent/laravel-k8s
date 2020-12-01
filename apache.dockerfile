@@ -1,6 +1,6 @@
 FROM ghcr.io/chivincent-rosetta/laravel-php:apache
 
-WORKDIR /web
+WORKDIR /var/www
 
 COPY --from=ghcr.io/chivincent-rosetta/laravel-k8s-codebase /src .
 
