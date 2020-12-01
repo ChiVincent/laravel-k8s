@@ -5,3 +5,5 @@ WORKDIR /web
 VOLUME ["/web"]
 
 ENTRYPOINT [".docker/production/entrypoint.sh"]
+
+CMD ["php-fpm"]
