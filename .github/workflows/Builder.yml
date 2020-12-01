@@ -15,3 +15,4 @@ jobs:
           password: ${{ secrets.CR_TOKEN }}
           registry: ghcr.io
           dockerfile: builder.dockerfile
+          tags: "latest"

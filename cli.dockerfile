@@ -1,6 +1,8 @@
 FROM php
 
-COPY . .
+WORKDIR /app
+
+COPY --from=ghcr.io/chivincent-rosetta/laravel-k8s-codebase /src .
 
 RUN apt-get update -yq && apt-get install -yq libicu-dev && \
     docker-php-ext-install bcmath opcache pdo_mysql pcntl intl && \
