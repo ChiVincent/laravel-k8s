@@ -8,3 +8,5 @@ RUN chmod -R 777 bootstrap/cache storage && \
     php artisan view:cache && php artisan event:cache
 
 ENTRYPOINT [".docker/production/entrypoint.sh"]
+
+CMD ["php-fpm"]
