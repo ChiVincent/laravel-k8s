@@ -3,7 +3,7 @@ name: Docker Image Builder
 on: push
 
 jobs:
-  codebaase:
+  build-images:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,10 +16,6 @@ jobs:
           registry: ghcr.io
           dockerfile: builder.dockerfile
           tags: "latest"
-  applications:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
       - name: Publish Apache Image
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
