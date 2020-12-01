@@ -1,0 +1,70 @@
+name: Docker Image Builder
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish Codebase Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-codebase
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: builder.dockerfile
+          tags: "latest"
+      - name: Publish Apache Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-apache
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: apache.dockerfile
+      - name: Publish Cli Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-cli
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: cli.dockerfile
+      - name: Publish Nginx Copy Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-nginx-copy
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: nginx-copy.dockerfile
+      - name: Publish Nginx Mount Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-nginx-mount
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: nginx-mount.dockerfile
+      - name: Publish PHP-FPM Copy Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-phpfpm-copy
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: phpfpm-copy.dockerfile
+      - name: Publish PHP-FPM Mount Image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: chivincent-rosetta/laravel-k8s-phpfpm-mount
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_TOKEN }}
+          registry: ghcr.io
+          dockerfile: phpfpm-mount.dockerfile
