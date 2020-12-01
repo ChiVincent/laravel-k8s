@@ -10,7 +10,7 @@ jobs:
       - name: Publish to GitHub Package
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: chivincent-rosetta/laravel-k8s/codebase
+          name: chivincent-rosetta/laravel-k8s-codebase
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
