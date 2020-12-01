@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,4 +43,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(
+            new class($token) extends ResetPassword implements ShouldQueue {
+                use Queueable;
+            }
+        );
+    }
 }
