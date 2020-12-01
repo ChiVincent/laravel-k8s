@@ -28,7 +28,7 @@ jobs:
           password: ${{ secrets.CR_TOKEN }}
           registry: ghcr.io
           dockerfile: apache.dockerfile
-      - name: Publish Cli Image
+      - name: Publish CLI Image
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: chivincent-rosetta/laravel-k8s-cli
