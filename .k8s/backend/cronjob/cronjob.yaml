@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-worker
+  labels:
+    app: laravel-k8s
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: ghcr.io/chivincent-rosetta/laravel-k8s-cli
+              command: ["php", "artisan", "schedule:run"]
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: docker-configjson-ghcr-io

@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            Cache::put('Cache Time ', now(), 60);
+            Cache::put('Cache Time', now());
         })->everyMinute();
     }
 
