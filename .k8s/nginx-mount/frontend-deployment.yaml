@@ -16,11 +16,24 @@ spec:
         app: laravel-k8s
         tier: frontend
     spec:
+      volumes:
+        - name: code
+          emptyDir: {}
+      initContainers:
+        - name: codebase
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-codebase
+          command: ["cp", "-R", ".", "/web"]
+          volumeMounts:
+            - name: code
+              mountPath: /web
       containers:
         - name: php-fpm
-          image: ghcr.io/chivincent-rosetta/laravel-k8s-phpfpm-copy
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-phpfpm-mount
           ports:
             - containerPort: 9000
+          volumeMounts:
+            - name: code
+              mountPath: /web
           env:
             - name: APP_KEY
               valueFrom:
@@ -63,9 +76,12 @@ spec:
                   name: heroku-redis
                   key: port
         - name: nginx
-          image: ghcr.io/chivincent-rosetta/laravel-k8s-nginx-copy
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-nginx-mount
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: code
+              mountPath: /web
           env:
             - name: APP_KEY
               valueFrom:
