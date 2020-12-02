@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: queue-worker
   labels:
     app: laravel-k8s
 spec:
@@ -9,18 +9,17 @@ spec:
   selector:
     matchLabels:
       app: laravel-k8s
-      tier: frontend
+      tier: backend
   template:
     metadata:
       labels:
         app: laravel-k8s
-        tier: frontend
+        tier: backend
     spec:
       containers:
-        - name: laravel-k8s
-          image: ghcr.io/chivincent-rosetta/laravel-k8s-apache
-          ports:
-            - containerPort: 80
+        - name: laravel-k8s-queue-worker
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-cli
+          command: ["php", "artisan", "horizon"]
           env:
             - name: APP_KEY
               valueFrom:
