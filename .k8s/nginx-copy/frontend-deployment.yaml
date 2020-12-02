@@ -16,13 +16,6 @@ spec:
         app: laravel-k8s
         tier: frontend
     spec:
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: nginx-vhost-config
-            items:
-              - key: config
-                path: www.conf
       containers:
         - name: php-fpm
           image: ghcr.io/chivincent-rosetta/laravel-k8s-phpfpm-copy
@@ -73,9 +66,6 @@ spec:
           image: ghcr.io/chivincent-rosetta/laravel-k8s-nginx-copy
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/conf.d
           env:
             - name: APP_KEY
               valueFrom:

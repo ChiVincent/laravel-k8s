@@ -17,12 +17,6 @@ spec:
         tier: frontend
     spec:
       volumes:
-        - name: nginx-config
-          configMap:
-            name: nginx-vhost-config
-            items:
-              - key: config
-                path: www.conf
         - name: code
           emptyDir: {}
       initContainers:
@@ -86,8 +80,6 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/conf.d
             - name: code
               mountPath: /web
           env:

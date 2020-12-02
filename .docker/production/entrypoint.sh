@@ -1,6 +1,6 @@
 #!/bin/bash
 
-chmod -R 777 storage bootstra/cache
+chmod -R 777 storage bootstrap/cache
 
 php artisan optimize
 
