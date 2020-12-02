@@ -9,6 +9,27 @@ This repository is running laravel application with kubernetes.
 
 ### Prepare Credentials
 
+#### GitHub Container Registry
+
+```
+$ echo -n "<Your GitHub Username>:<Your GitHub Token>" | base64
+<AUTH TOKEN>
+```
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-configjson-ghcr-io
+stringData:
+  .dockerconfigjson: |
+    {"auths":{"ghcr.io":{"auth":"<AUTH TOKEN>"}}}
+```
+
+```
+$ kubectl apply -f docker-configjson-ghcr-io.yaml
+```
+
 #### Heroku Jaws MySQL Service
 
 ```yaml
