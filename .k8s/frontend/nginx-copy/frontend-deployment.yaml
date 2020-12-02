@@ -1,0 +1,149 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: laravel-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel-k8s
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: laravel-k8s
+        tier: frontend
+    spec:
+      containers:
+        - name: php-fpm
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-phpfpm-copy
+          ports:
+            - containerPort: 9000
+          env:
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: laravel-app
+                  key: key
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: database
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: host
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: password
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: port
+            - name: MAIL_HOST
+              value: smtp.mailtrap.io
+            - name: MAIL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap
+                  key: port
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap
+                  key: username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap
+                  key: password
+            - name: MAIL_FROM_ADDRESS
+              value: hello@laravel-k8s.test
+        - name: nginx
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-nginx-copy
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: laravel-app
+                  key: key
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: database
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: host
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: password
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: port
+            - name: MAIL_HOST
+              value: smtp.mailtrap.io
+            - name: MAIL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap
+                  key: port
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap
+                  key: username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mailtrap
+                  key: password
+            - name: MAIL_FROM_ADDRESS
+              value: hello@laravel-k8s.test
+      imagePullSecrets:
+        - name: docker-configjson-ghcr-io
