@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: laravel-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel-k8s
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: laravel-k8s
+        tier: frontend
+    spec:
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-vhost-config
+            items:
+              - key: config
+                path: www.conf
+        - name: code
+          emptyDir: {}
+      initContainers:
+        - name: codebase
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-codebase
+          command: ["cp", "-R", ".", "/web"]
+          volumeMounts:
+            - name: code
+              mountPath: /web
+      containers:
+        - name: php-fpm
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-phpfpm-mount
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: code
+              mountPath: /web
+          env:
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: laravel-app
+                  key: key
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: database
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: host
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: password
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: port
+        - name: nginx
+          image: ghcr.io/chivincent-rosetta/laravel-k8s-nginx-mount
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+            - name: code
+              mountPath: /web
+          env:
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: laravel-app
+                  key: key
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: password
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-jaws-mysql
+                  key: database
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: host
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: password
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: heroku-redis
+                  key: port
+      imagePullSecrets:
+        - name: docker-configjson-ghcr-io
