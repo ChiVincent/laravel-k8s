@@ -1,0 +1,79 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-worker
+  labels:
+    app: laravel-k8s
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: ghcr.io/chivincent-rosetta/laravel-k8s-cli
+              command: ["php", "artisan", "schedule:run"]
+              env:
+                - name: APP_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: laravel-app
+                      key: key
+                - name: DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-jaws-mysql
+                      key: host
+                - name: DB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-jaws-mysql
+                      key: username
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-jaws-mysql
+                      key: password
+                - name: DB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-jaws-mysql
+                      key: database
+                - name: REDIS_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-redis
+                      key: host
+                - name: REDIS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-redis
+                      key: password
+                - name: REDIS_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: heroku-redis
+                      key: port
+                - name: MAIL_HOST
+                  value: smtp.mailtrap.io
+                - name: MAIL_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: mailtrap
+                      key: port
+                - name: MAIL_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: mailtrap
+                      key: username
+                - name: MAIL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mailtrap
+                      key: password
+                - name: MAIL_FROM_ADDRESS
+                  value: hello@laravel-k8s.test
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: docker-configjson-ghcr-io
